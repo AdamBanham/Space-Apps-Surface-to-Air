@@ -1,12 +1,44 @@
+from pyproj import Proj
 from math import radians, cos, sin, asin, sqrt, atan2
 
+p = Proj(proj='utm',zone=10,ellps='WGS84', preserve_units=False)
 class Coordinate:
+    def __init__(self):
+        raise NotImplementedError("Coordinate is an abstract class")
+
+    def as_tuple(self):
+        raise NotImplementedError("method is an abstract method")
+
+class GeoCoordinate(Coordinate):
     def __init__(self, latitude, longitude):
         self.longitude = longitude
         self.latitude = latitude
     
     def as_tuple(self):
-        return (self.latitude, self.longitude)
+        return (self.longitude, self.latitude)
+
+class CartesianCoordinate(Coordinate):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def as_tuple(self):
+        return (self.x, self.y)
+
+def geo_to_cartesian(geo_coord):
+    # print(geo_coord.longitude, geo_coord.latitude)
+    x,y = p(geo_coord.longitude, geo_coord.latitude)
+    
+    return CartesianCoordinate(x, y)
+
+def measurement_to_cartesian(measurement):
+    measurement.location = geo_to_cartesian(measurement.location)
+    return measurement
+
+def measurements_to_cartesian(measurements):
+    return list(map(measurement_to_cartesian, measurements))
+
+
 
 def dist_between_coords(coord1, coord2):
     """
