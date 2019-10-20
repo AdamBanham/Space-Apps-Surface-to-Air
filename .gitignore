@@ -1,3 +1,6 @@
 
 *.csv
 *.nc
+*.ipynb
+*.ipynb
+.ipynb_checkpoints/ADAM-tester-checkpoint.ipynb
