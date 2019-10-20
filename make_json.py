@@ -53,8 +53,9 @@ def make_json(heights,points,filename):
                 output_file.write(",{},{},{}".format(point[0],point[1],height))
     except:
         print("oops")
-        return -1
+        outcome = -1
     finally:
         output_file.write("]]]")
         output_file.close()
-        return 1
+        outcome = 1
+        return outcome
