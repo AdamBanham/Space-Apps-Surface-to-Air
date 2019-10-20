@@ -15,7 +15,7 @@ class GeoCoordinate(Coordinate):
         self.latitude = latitude
     
     def as_tuple(self):
-        return (self.longitude, self.latitude)
+        return (self.latitude, self.longitude)
 
 class CartesianCoordinate(Coordinate):
     def __init__(self, x, y):

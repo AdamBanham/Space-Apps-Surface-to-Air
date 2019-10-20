@@ -62,7 +62,7 @@ def find_grid_boundaries(pts):
     x, y = zip(*pts)
     return (min(x), max(x)), (min(y), max(y))
 
-def make_mesh_grid(pts, cellsize=1000):
+def make_mesh_grid(pts, cellsize=2000):
     x_bounds, y_bounds = find_grid_boundaries(pts)
     xmin, xmax = x_bounds
     ymin, ymax = y_bounds
@@ -96,7 +96,7 @@ def interpolate_measurements(measurements, interptype='griddata'):
 
 def cartesian_pt_to_geo(pt):
     x, y = pt
-    lat, lon = location.p(x, y, inverse=True)
+    lon, lat = location.p(x, y, inverse=True)
     return (lat, lon)
 
 
@@ -104,6 +104,7 @@ def cartesian_pt_to_geo(pt):
 # pprint(fetch_measurements_for_parameter(conn, "co"))
 measurements = fetch_measurements_for_parameter(conn, "co")
 measurements = get_latest_measurements(measurements)
+print([measurement.location.as_tuple() for measurement in measurements])
 gridx, gridy, grid = interpolate_measurements(measurements, interptype='rbf')
 output_pts = zip(np.nditer(gridx), np.nditer(gridy))
 output_z = list(np.nditer(grid))
@@ -111,7 +112,8 @@ output_z = [float(z) for z in output_z]
 # output_z = [x[0] for x in output_z]
 output_pts = list(map(cartesian_pt_to_geo, list(output_pts)))
 
-OUTPUT_FILENAME = 'out.json'
+print(output_pts[:5])
+OUTPUT_FILENAME = 'out'
 success = make_json(output_z, output_pts, OUTPUT_FILENAME)
 if success == 1:
     print("Grid succesfully written to json")
